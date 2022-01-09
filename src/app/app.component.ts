@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +6,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'function-drawer';
+  functionValue :string = '';
+  @ViewChild('functionInput') inputRef!: ElementRef;
+  constructor() {
+  }
+
+  onAddGraph() {
+    this.functionValue = this.inputRef.nativeElement.value;
+  }
 }
