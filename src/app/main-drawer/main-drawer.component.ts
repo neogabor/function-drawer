@@ -1,11 +1,11 @@
-import { Component, ElementRef, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-main-drawer',
   templateUrl: './main-drawer.component.html',
   styleUrls: ['./main-drawer.component.css']
 })
-export class AppMainDrawerComponent implements OnInit {
+export class AppMainDrawerComponent implements OnInit, AfterViewInit, OnChanges {
 
   @Input() functionEq!: string;
   @ViewChild('canvasFunc') canvas!: ElementRef<HTMLCanvasElement>;
@@ -35,4 +35,22 @@ export class AppMainDrawerComponent implements OnInit {
     this.ctx.stroke();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if(this.functionEq) {
+      this.ctx.clearRect(0,0,this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+      this.drawCoordinateSys();
+      if(this.functionEq.indexOf('x')==-1) {
+        console.error('Function must contain "x" variable');
+      }
+      this.drawFunction();
+    };
+  }
+
+  drawFunction() {
+    const halfLength = 250;
+    const steepness = Number(this.functionEq.substring(0, this.functionEq.indexOf('x')));
+    this.ctx.moveTo(halfLength + halfLength/steepness,0);
+    this.ctx.lineTo(halfLength - halfLength/steepness, 500);
+    this.ctx.stroke();
+  }
 }
