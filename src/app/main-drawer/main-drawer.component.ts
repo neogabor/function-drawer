@@ -48,15 +48,27 @@ export class AppMainDrawerComponent implements OnInit, AfterViewInit, OnChanges 
 
   drawFunction() {
     const halfLength = 250;
-    const steepness = Number(this.functionEq.substring(0, this.functionEq.indexOf('x')));
-    const offset = Number(this.functionEq.substring(this.functionEq.indexOf('x') + 1));
-    this.ctx.moveTo(halfLength,halfLength);
-    for(let i=1; i<=250; i++) {
-      this.ctx.lineTo(halfLength + i, halfLength - offset - steepness * i);
+    let numberPattern = /\d+\.?\d*/;
+    let steepness = Number(this.functionEq.match(numberPattern));console.log(steepness);
+    let power = 1;
+    if(this.functionEq.includes('^')) {
+      power = Number(this.functionEq.substring(steepness.toString().length + 1).match(numberPattern));
+    }
+    let offset = 0;
+    if(this.functionEq.indexOf('^') + 2 != this.functionEq.length) {
+      if (this.functionEq.includes('^')) {
+        offset = Number(this.functionEq.substring(steepness.toString().length + power.toString().length + 2).match(numberPattern));
+      } else {
+        offset = Number(this.functionEq.substring(steepness.toString().length).match(numberPattern));
+      }
     }
     this.ctx.moveTo(halfLength,halfLength);
     for(let i=1; i<=250; i++) {
-      this.ctx.lineTo(halfLength - i, halfLength - offset + steepness * i);
+      this.ctx.lineTo(halfLength + i, halfLength - offset - steepness * Math.pow(i, power));
+    }
+    this.ctx.moveTo(halfLength,halfLength);
+    for(let i=1; i<=250; i++) {
+     this.ctx.lineTo(halfLength - i, halfLength - offset + steepness * Math.pow(i, power));
     }
   
     this.ctx.stroke();
