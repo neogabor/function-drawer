@@ -49,8 +49,16 @@ export class AppMainDrawerComponent implements OnInit, AfterViewInit, OnChanges 
   drawFunction() {
     const halfLength = 250;
     const steepness = Number(this.functionEq.substring(0, this.functionEq.indexOf('x')));
-    this.ctx.moveTo(halfLength + halfLength/steepness,0);
-    this.ctx.lineTo(halfLength - halfLength/steepness, 500);
+    const offset = Number(this.functionEq.substring(this.functionEq.indexOf('x') + 1));
+    this.ctx.moveTo(halfLength,halfLength);
+    for(let i=1; i<=250; i++) {
+      this.ctx.lineTo(halfLength + i, halfLength - offset - steepness * i);
+    }
+    this.ctx.moveTo(halfLength,halfLength);
+    for(let i=1; i<=250; i++) {
+      this.ctx.lineTo(halfLength - i, halfLength - offset + steepness * i);
+    }
+  
     this.ctx.stroke();
   }
 }
